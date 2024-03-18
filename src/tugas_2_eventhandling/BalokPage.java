@@ -1,13 +1,9 @@
 package tugas_2_eventhandling;
 
-import BangunDatar.Persegi;
+import BangunRuang.Balok;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 /**
  *
@@ -26,10 +22,10 @@ public class BalokPage extends JFrame implements ActionListener {
     JLabel labelVolume = new JLabel("Volume Balok");
     JLabel labelLuasPermukaan = new JLabel("Luas Permukaan Balok");
 
-    JLabel labelHasilLuas = new JLabel("[Hasil berupa angka]");
-    JLabel labelHasilKeliling = new JLabel("[Hasil berupa angka]");
-    JLabel labelHasilVolume = new JLabel("[Hasil berupa angka]");
-    JLabel labelHasilLuasPermukaan = new JLabel("[Hasil berupa angka]");
+    JLabel labelHasilLuas = new JLabel();
+    JLabel labelHasilKeliling = new JLabel();
+    JLabel labelHasilVolume = new JLabel();
+    JLabel labelHasilLuasPermukaan = new JLabel();
 
     JTextField inputPanjang = new JTextField();
     JTextField inputLebar = new JTextField();
@@ -39,6 +35,7 @@ public class BalokPage extends JFrame implements ActionListener {
     JButton tombolReset = new JButton("Reset");
 
     BalokPage(String username, String jenisKelamin) {
+        // Melakukan operasi ternary untuk menentukan apakah user dipanggil "Mr." atau "Mrs."
         String panggilan = (jenisKelamin == "l") ? "Mr. " : "Mrs. ";
 
         setVisible(true);
@@ -71,7 +68,7 @@ public class BalokPage extends JFrame implements ActionListener {
         add(labelHasilKeliling);
         add(labelHasilVolume);
         add(labelHasilLuasPermukaan);
-        
+
         // Memberikan tulisan pada label header
         header.setText("Welcome, " + panggilan + username);
         header.setFont(header.getFont().deriveFont(20.0f));
@@ -103,24 +100,67 @@ public class BalokPage extends JFrame implements ActionListener {
         labelHasilLuasPermukaan.setBounds(200, 410, 280, 16);
 
         tombolHasil.addActionListener(this);
+        tombolReset.addActionListener(this);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == tombolHasil) {
-            double panjang = Double.parseDouble(inputPanjang.getText());
-            double lebar = Double.parseDouble(inputLebar.getText());
-            double tinggi = Double.parseDouble(inputTinggi.getText());
+            // Kode diapit dalam try catch untuk memberikan error handling
+            try {
+                // Mengambil inputan panjang, lebar, dan tinggi yang diketik oleh user
+                // sekaligus mengkonversinya menjadi bertipe data Double
+                Double panjang = Double.valueOf(inputPanjang.getText());
+                Double lebar = Double.valueOf(inputLebar.getText());
+                Double tinggi = Double.valueOf(inputTinggi.getText());
 
-            Persegi bangun1 = new Persegi(panjang, lebar);
-
-            String hasilLuas = String.valueOf(bangun1.Luas());
-            String hasilKeliling = String.valueOf(bangun1.Keliling());
-
-            labelHasilLuas.setText(hasilLuas);
-            labelHasilKeliling.setText(hasilKeliling);
+                /* 
+                  Membuat objek bernama bangun dengan class Balok
+                  Mengapa yang dibuat hanya class Balok saja dan class Persegi tidak?
+                  Karena class Balok merupakan parent class dari class persegi.
+                  Sehingga, class balok telah mewarisi sifat-sifat yang dimiliki oleh class Persegi.
+                  Dengan demikian, selain dapat mengakses method-method yang dimilikinya,
+                  class Balok juga dapat mengakses method-method 
+                  yang dimiliki class Persegi, yaitu Luas() dan Keliling().
+                */
+                Balok bangun = new Balok(panjang, lebar, tinggi);
+                
+                // Mengakses method Luas() dan Keliling() untuk menghitung persegi
+                Double keliling = bangun.Keliling();
+                Double luas = bangun.Luas();
+                
+                // Mengakses method Volume() dan LuasPermukaan() untuk menghitung balok
+                Double volume = bangun.Volume();
+                Double luasPermukaan = bangun.LuasPermukaan();
+                
+                // Hasil keliling, luas, volume, dan luas permukaan 
+                // yang bertipe data double dikonversi menjadi String agar dapat ditampilkan di layar.
+                String hasilKeliling = String.valueOf(keliling);
+                String hasilLuas = String.valueOf(luas);
+                String hasilVolume = String.valueOf(volume);
+                String hasilLuasPermukaan = String.valueOf(luasPermukaan);
+                
+                // Menampilkan hasil ke frame
+                labelHasilKeliling.setText(hasilKeliling);
+                labelHasilLuas.setText(hasilLuas);
+                labelHasilVolume.setText(hasilVolume);
+                labelHasilLuasPermukaan.setText(hasilLuasPermukaan);
+            } catch (Exception error) {
+                // Menampilkan pesan error dalam bentuk pop-up
+                JOptionPane.showMessageDialog(this, error.getMessage());
+            }
         } else if (e.getSource() == tombolReset) {
             // Berikan aksi jika tombol reset diklik
+            // input menjadi kosong
+            inputPanjang.setText("");
+            inputLebar.setText("");
+            inputTinggi.setText("");
+
+            // label menjadi kosong
+            labelHasilLuas.setText("");
+            labelHasilKeliling.setText("");
+            labelHasilVolume.setText("");
+            labelHasilLuasPermukaan.setText("");
         }
     }
 }

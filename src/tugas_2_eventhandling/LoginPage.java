@@ -2,11 +2,6 @@ package tugas_2_eventhandling;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JRadioButton;
 import javax.swing.*;
 
 /**
@@ -75,19 +70,22 @@ public class LoginPage extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            // Mengambil nilai dari username yang diinput user di textfield
+            // Mengambil nilai dari username dan password yang diinput user di textfield
             String username = inputUsername.getText();
+            String password = inputPassword.getText();
             
             // Mengambil nilai dari jenis kelamin yang dipilih
             String jenisKelamin = pilihLaki.isSelected() ? "l" : "p";
             
-            // Memberikan error handling jika username kosong
-            if (username.isEmpty()) {
+            // Memberikan error handling jika username atau password kosong
+            if (username.isEmpty() || password.isEmpty()) {
                 throw new Exception("Jangan kosong, Gus!");
             }
             
-            // Pindah halaman
+            // Pindah ke halaman Balok
             new BalokPage(username, jenisKelamin);
+            
+            // Hapus halaman saat ini (Login)
             this.dispose();
         } catch (Exception error) {
             // Menampilkan error dalam bentuk popup
